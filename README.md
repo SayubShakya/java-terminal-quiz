@@ -6,5 +6,21 @@ javac Main.java && java Main
 
 ```
 
-https://github.com/user-attachments/assets/ba29a47f-5c8a-4936-9be2-0929e201948a
+
+git commit --amend
+
+
+vim terminal
+
+> Enable Insertion:
+Shift+i
+
+> Exit Vim Commands:
+Esc
+
+> Write Vim Commands:
+Shift+:
+
+> Write and quit:
+wq
 
