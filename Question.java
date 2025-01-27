@@ -1,6 +1,6 @@
 class Question {
-    private String questionText; // question text haru
-    private Option[] options; //fixed-size array ko options
+    private String questionText;
+    private Option[] options;
 
     public Question(String questionText, Option[] options) {
         this.questionText = questionText;
