@@ -2,7 +2,6 @@ import java.util.Scanner;
 
 class QuizImpl implements Quizable {
     private QuestionRepository questionRepository;
-    private int currentIndex = 0;
     private Scanner scanner = new Scanner(System.in);
 
     public QuizImpl(QuestionRepository questionRepository) {
@@ -55,7 +54,11 @@ class QuizImpl implements Quizable {
 
     @Override
     public void startGame() {
-        if (currentIndex == 0) {
+        int correct = 0;
+        int played = 0;
+        Question[] questions = questionRepository.getAll();
+
+        if (questions == null || questions.length == 0) {
             System.out.println("--------------------------------------------------");
             System.out.println("Please add questions before starting the quiz in Manage Quiz");
             System.out.println("--------------------------------------------------");
@@ -67,73 +70,46 @@ class QuizImpl implements Quizable {
         System.out.println("Welcome to the Quiz Game!");
         System.out.println("--------------------------------------------------");
 
-        int totalScore = 0;
-        int questionCount = 0;
+        for (Question question : questions) {
 
-        int mistakes = 0;
-        int maxMistakesAllowed = 5;
-        
-        Question[] questions = questionRepository.getAll();
-        while (questionCount < currentIndex && mistakes < maxMistakesAllowed) {
-            Question currentQuestion = questions[questionCount];
+            System.out.println(question.getQuestionText());
 
-            System.out.println("Question " + (questionCount + 1) + ": " + currentQuestion.getQuestionText());
-
-            for (int i = 0; i < currentQuestion.getOptions().length; i++) {
-                System.out.println((i + 1) + ". " + currentQuestion.getOptions());
+            for (Option option : question.getOptions().getAll()) {
+                System.out.println(option.getId() + ". " + option.getName());
             }
 
-            System.out.print("Enter your answer (1-" + currentQuestion.getOptions().length + ") or press Q to quit: ");
+            for (int i = 0; i < 3; i++) {
+                try {
 
-            String input = scanner.nextLine();
+                    int choice = Integer.parseInt(scanner.nextLine());
 
+                    Option chosenOption = null;
 
-            if (input.equalsIgnoreCase("Q")) {
-                break;
-            }
-
-            try {
-                int userAnswer = Integer.parseInt(input);
-                if (userAnswer >= 1 && userAnswer <= currentQuestion.getOptions().length) {
-                    if (currentQuestion.isCorrectAnswer(userAnswer - 1)) {
-                        totalScore++;
-                    } else {
-                        mistakes++;
+                    for (Option option : question.getOptions().getAll()) {
+                        if (option.getId() == choice) {
+                            chosenOption = option;
+                        }
                     }
-                    questionCount++;
-                } else {
-                    System.out.println("--------------------------------------------------");
-                    System.out.println("Invalid choice. Please select a valid option");
+
+                    if (chosenOption == null) {
+                        throw new RuntimeException();
+                    }
+
+                    if (chosenOption.isCorrect()) {
+                        correct++;
+                    }
+
+                    break;
+
+                } catch (Exception ex) {
+                    continue;
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("--------------------------------------------------");
-                System.out.println("Invalid input. Please enter a number between 1 and "
-                        + currentQuestion.getOptions().length + " or Q to quit");
             }
+            played++;
         }
 
-        System.out.println("--------------------------------------------------");
-        if (mistakes >= maxMistakesAllowed) {
-            System.out.println("Game Over: You made 5 mistakes");
-        } else {
-            System.out.println("Thank you for playing the quiz game!");
-        }
-        System.out.println("You scored " + totalScore + " out of " + questionCount);
+        System.out.println(correct+"/"+played);
 
-        System.out.println("--------------------------------------------------");
-        while (true) {
-            System.out.println("To go back to the menu, press '#'");
-            String choice = scanner.nextLine();
-
-            if (choice.equalsIgnoreCase("#")) {
-                menu();
-                break;
-            } else {
-                System.out.println("--------------------------------------------------");
-                System.out.println("Invalid input, You must enter '#' to go back to the menu");
-                System.out.println("--------------------------------------------------");
-            }
-        }
     }
 
     @Override
@@ -145,16 +121,16 @@ class QuizImpl implements Quizable {
 
     private void manageQuiz() {
         System.out.println("********Manage Quiz********");
-        System.out.println("Press '1' to Add a Question");
+        System.out.println("Press '1' to Add a Questions");
         System.out.println("Press '2' to View All Questions");
         System.out.println("Press '3' to View a Question by ID");
         System.out.println("Press '4' to Delete a Question");
         System.out.println("Press '5' to Go Back to Menu");
         System.out.println("***************************");
-    
+
         System.out.print("Enter your choice: ");
         int choice;
-    
+
         try {
             choice = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
@@ -163,13 +139,16 @@ class QuizImpl implements Quizable {
             System.out.println("--------------------------------------------------");
             return;
         }
-    
+
         switch (choice) {
             case 1:
-                questionRepository.save(); 
+                addQuestions();
                 break;
             case 2:
-                questionRepository.getAll();
+                Question[] questions = questionRepository.getAll();
+                for (Question question : questions) {
+                    System.out.println(question);
+                }
                 break;
             case 3:
                 System.out.print("Enter question ID: ");
@@ -206,5 +185,98 @@ class QuizImpl implements Quizable {
         System.out.println("--------------------------------------------------");
         System.out.println("Thank you for playing the quiz game. Goodbye!");
         System.out.println("--------------------------------------------------");
+        scanner.close();
+        System.exit(0);
     }
+
+    public void addQuestions() {
+        while (true) {
+            System.out.println("--------------------------------------------------");
+            System.out.print("Enter your question or Q to go back: ");
+
+            Question question = new Question();
+
+            try {
+                String text = scanner.nextLine();
+
+                if (hasQ(text)) {
+                    break;
+                }
+
+                isValidText(text);
+                question.setQuestionText(text);
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a valid question.");
+                continue;
+            }
+
+            DynamicOptionArray dynamicOptionArray = new DynamicOptionArray();
+            int optionId = 1;
+            while (true) {
+
+                if (handleOption(dynamicOptionArray,optionId)) {
+                    break;
+                } else {
+                    optionId++;
+                    continue;
+                }
+            }
+            question.setOptions(dynamicOptionArray);
+            questionRepository.save(question);
+        }
+    }
+
+    public boolean handleOption(DynamicOptionArray dynamicOptionArray, int optionId) {
+        Option option = new Option();
+        option.setId(optionId);
+        try {
+            System.out.print("Enter your option or Q to go back: ");
+            String text = scanner.nextLine();
+
+            if (hasQ(text))
+                return true;
+
+            isValidText(text);
+            option.setName(text);
+
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a valid option.");
+            return false;
+        }
+
+        try {
+            System.out.print("Correct option?: ");
+            String text = scanner.nextLine();
+            if (hasQ(text))
+                return true;
+
+            isValidText(text);
+
+            if (text.equalsIgnoreCase("Y")) {
+                option.setCorrect(true);
+            } else if (text.equalsIgnoreCase("N")) {
+                option.setCorrect(false);
+            } else {
+                throw new RuntimeException();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a valid value (y/n).");
+            return false;
+        }
+
+        dynamicOptionArray.add(option);
+        return false;
+    }
+
+    public boolean hasQ(String text) {
+        return "Q".equalsIgnoreCase(text);
+    }
+
+    public void isValidText(String text) {
+        if (text == null || text.length() == 0) {
+            throw new RuntimeException();
+        }
+    }
+
 }

@@ -4,10 +4,12 @@ class Question {
     private String questionText;
     private DynamicOptionArray options;
 
-    public Question(String questionText, DynamicOptionArray options) {
-        this.id = idTracker++;
-        this.questionText = questionText;
+    public void setOptions(DynamicOptionArray options) {
         this.options = options;
+    }
+
+    public Question(){
+        this.id = idTracker++;
     }
 
     public int getId() {
@@ -18,6 +20,10 @@ class Question {
         return questionText;
     }
 
+    public void setQuestionText(String text){
+        this.questionText = text;
+    }
+
     public DynamicOptionArray getOptions() {
         return options;
     }
@@ -25,6 +31,8 @@ class Question {
     public boolean isCorrectAnswer(int answerIndex) {
         return options.get(answerIndex).isCorrect();
     }
+
+    
 
 
     @Override
