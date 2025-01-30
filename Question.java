@@ -1,12 +1,10 @@
-import java.util.Arrays;
-
 class Question {
     private static int idTracker = 1;
     private int id;
     private String questionText;
-    private Option[] options;
+    private DynamicOptionArray options;
 
-    public Question(String questionText, Option[] options) {
+    public Question(String questionText, DynamicOptionArray options) {
         this.id = idTracker++;
         this.questionText = questionText;
         this.options = options;
@@ -20,16 +18,20 @@ class Question {
         return questionText;
     }
 
-    public Option[] getOptions() {
+    public DynamicOptionArray getOptions() {
         return options;
     }
 
     public boolean isCorrectAnswer(int answerIndex) {
-        return options[answerIndex].isCorrect();
+        return options.get(answerIndex).isCorrect();
     }
+
 
     @Override
     public String toString() {
-        return "ID: " + id + " | " + questionText + " | Options: " + Arrays.toString(options);
+        return "Question [id=" + id + ", questionText=" + questionText + ", options=" + options + "]";
     }
+
+    
+
 }

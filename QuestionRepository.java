@@ -1,6 +1,6 @@
 public interface QuestionRepository {
-    boolean save();
+    boolean save(Question question);
     Question[] getAll();
-    Question getById(Integer id);
-    boolean delete(Integer id);
+    Question getById(int id);
+    boolean deleteById(int id);
 }

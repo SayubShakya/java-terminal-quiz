@@ -1,9 +1,13 @@
 import java.util.Scanner;
 
-class QuizImpl implements Quizable, QuestionRepository {
-    private Question[] questions = null;
+class QuizImpl implements Quizable {
+    private QuestionRepository questionRepository;
     private int currentIndex = 0;
     private Scanner scanner = new Scanner(System.in);
+
+    public QuizImpl(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
+    }
 
     @Override
     public void menu() {
@@ -68,17 +72,19 @@ class QuizImpl implements Quizable, QuestionRepository {
 
         int mistakes = 0;
         int maxMistakesAllowed = 5;
-
+        
+        Question[] questions = questionRepository.getAll();
         while (questionCount < currentIndex && mistakes < maxMistakesAllowed) {
             Question currentQuestion = questions[questionCount];
 
             System.out.println("Question " + (questionCount + 1) + ": " + currentQuestion.getQuestionText());
 
             for (int i = 0; i < currentQuestion.getOptions().length; i++) {
-                System.out.println((i + 1) + ". " + currentQuestion.getOptions()[i].getName());
+                System.out.println((i + 1) + ". " + currentQuestion.getOptions());
             }
 
             System.out.print("Enter your answer (1-" + currentQuestion.getOptions().length + ") or press Q to quit: ");
+
             String input = scanner.nextLine();
 
 
@@ -145,10 +151,10 @@ class QuizImpl implements Quizable, QuestionRepository {
         System.out.println("Press '4' to Delete a Question");
         System.out.println("Press '5' to Go Back to Menu");
         System.out.println("***************************");
-
+    
         System.out.print("Enter your choice: ");
         int choice;
-
+    
         try {
             choice = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
@@ -157,19 +163,32 @@ class QuizImpl implements Quizable, QuestionRepository {
             System.out.println("--------------------------------------------------");
             return;
         }
-
+    
         switch (choice) {
             case 1:
-                save();  
+                questionRepository.save(); 
                 break;
             case 2:
-                getAll();
+                questionRepository.getAll();
                 break;
             case 3:
-                getById(choice);
+                System.out.print("Enter question ID: ");
+                try {
+                    int id = Integer.parseInt(scanner.nextLine());
+                    questionRepository.getById(id);
+                } catch (Exception e) {
+                    System.out.println("Invalid input. Please enter a valid question ID.");
+                }
                 break;
             case 4:
-                delete(choice);
+                System.out.print("Enter question ID to delete: ");
+                try {
+                    int id = Integer.parseInt(scanner.nextLine());
+                    questionRepository.deleteById(id);
+                    System.out.println("Question deleted successfully.");
+                } catch (Exception e) {
+                    System.out.println("Invalid input. Please enter a valid question ID.");
+                }
                 break;
             case 5:
                 menu();
@@ -181,92 +200,6 @@ class QuizImpl implements Quizable, QuestionRepository {
                 break;
         }
     }
-
-    @Override
-    public boolean save() {  
-        System.out.println("--------------------------------------------------");
-        System.out.print("Enter the number of questions to add: ");
-
-        try {
-            int numQuestions = Integer.parseInt(scanner.nextLine());
-            if (questions == null) {
-                questions = new Question[numQuestions];
-            } else {
-                Question[] newQuestions = new Question[currentIndex + numQuestions];
-                System.arraycopy(questions, 0, newQuestions, 0, currentIndex);
-                questions = newQuestions;
-            }
-
-            for (int i = 0; i < numQuestions; i++) {
-                System.out.println("--------------------------------------------------");
-                System.out.print("Enter question: ");
-                String questionText = scanner.nextLine();
-
-                System.out.println("--------------------------------------------------");
-                System.out.print("Enter number of options: ");
-                int numOptions = Integer.parseInt(scanner.nextLine());
-                Option[] options = new Option[numOptions];
-
-                for (int j = 0; j < numOptions; j++) {
-                    System.out.print("Option " + (j + 1) + ": ");
-                    String optionText = scanner.nextLine();
-                    System.out.print("Is this option correct? (y/n): ");
-                    boolean isCorrect = scanner.nextLine().equalsIgnoreCase("y");
-                    options[j] = new Option(optionText, isCorrect);
-                }
-
-                questions[currentIndex++] = new Question(questionText, options);
-                System.out.println("--------------------------------------------------");
-                System.out.println("Question added successfully!");
-
-            }
-            return true;
-        } catch (Exception e) {
-            System.out.println("--------------------------------------------------");
-            System.out.println("Only numbers are supported. Please enter valid input.");
-            System.out.println("--------------------------------------------------");
-            return false;
-        }
-    }
-
-    @Override
-    public Question[] getAll() {
-        if (questions == null || currentIndex == 0) {
-            System.out.println("--------------------------------------------------");
-            System.out.println("No questions available. Please add questions first.");
-            System.out.println("--------------------------------------------------");
-            return null;
-        }
-    
-        System.out.println("--------------------------------------------------");
-        System.out.println("List of All Questions:");
-        for (int i = 0; i < currentIndex; i++) {
-            Question question = questions[i];
-            System.out.println("--------------------------------------------------");
-            System.out.println(question.getId() + "). Question: " + question.getQuestionText());
-            for (int j = 0; j < question.getOptions().length; j++) {
-                System.out.println((j + 1) + ". " + question.getOptions()[j].getName());
-            }
-        }
-        System.out.println("--------------------------------------------------");
-        return questions;
-    }
-    
-    
-
-    @Override
-    public Question getById(Integer id) {
-        System.out.println("Get by ID");
-        return null;
-    }
-    
-
-    @Override
-    public boolean delete(Integer id) {
-        System.out.println("Delete");
-        return false;
-    }
-    
 
     @Override
     public void quitGame() {
