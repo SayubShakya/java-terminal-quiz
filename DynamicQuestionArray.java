@@ -21,16 +21,16 @@ public class DynamicQuestionArray {
   }
 
   public void remove(int index) {
-    if (index >= 0 && index < questions.length) {  
+    if (index >= 0 && index < questions.length) {
       questions[index] = null;
     }
   }
 
   public Question get(int index) {
-    if (index >= 0 && index < questions.length) {  
+    if (index >= 0 && index < questions.length) {
       return questions[index];
     }
-    return null; 
+    return null;
   }
 
   public Question[] getAll() {

@@ -23,16 +23,16 @@ public class DynamicOptionArray {
   }
 
   public void remove(int index) {
-    if (index >= 0 && index < options.length) {  
+    if (index >= 0 && index < options.length) {
       options[index] = null;
     }
   }
 
   public Option get(int index) {
-    if (index >= 0 && index < options.length) {  
+    if (index >= 0 && index < options.length) {
       return options[index];
     }
-    return null; 
+    return null;
   }
 
   public Option[] getAll() {
@@ -41,6 +41,6 @@ public class DynamicOptionArray {
 
   @Override
   public String toString() {
-    return "DynamicOptionArray [options=" + Arrays.toString(options) + "]";
+    return " " + Arrays.toString(options);
   }
 }

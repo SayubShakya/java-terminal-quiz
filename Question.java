@@ -8,7 +8,7 @@ class Question {
         this.options = options;
     }
 
-    public Question(){
+    public Question() {
         this.id = idTracker++;
     }
 
@@ -20,7 +20,7 @@ class Question {
         return questionText;
     }
 
-    public void setQuestionText(String text){
+    public void setQuestionText(String text) {
         this.questionText = text;
     }
 
@@ -32,14 +32,9 @@ class Question {
         return options.get(answerIndex).isCorrect();
     }
 
-    
-
-
     @Override
     public String toString() {
-        return "Question [id=" + id + ", questionText=" + questionText + ", options=" + options + "]";
+        return "Question " + id + ":" + questionText + ", options =" + options;
     }
-
-    
 
 }

@@ -60,7 +60,7 @@ class QuizImpl implements Quizable {
 
         if (questions == null || questions.length == 0) {
             System.out.println("--------------------------------------------------");
-            System.out.println("Please add questions before starting the quiz in Manage Quiz");
+            System.out.println("Please add questions before starting the quiz in Manage Quiz.");
             System.out.println("--------------------------------------------------");
             menu();
             return;
@@ -72,7 +72,7 @@ class QuizImpl implements Quizable {
 
         for (Question question : questions) {
 
-            System.out.println(question.getQuestionText());
+            System.out.println("Question: " + question.getId() + ". "+ question.getQuestionText());
 
             for (Option option : question.getOptions().getAll()) {
                 System.out.println(option.getId() + ". " + option.getName());
@@ -80,9 +80,10 @@ class QuizImpl implements Quizable {
 
             for (int i = 0; i < 3; i++) {
                 try {
-
+                    System.out.print("Your answer: ");
                     int choice = Integer.parseInt(scanner.nextLine());
-
+                    System.out.println("--------------------------------------------------");
+                    System.out.println("");
                     Option chosenOption = null;
 
                     for (Option option : question.getOptions().getAll()) {
@@ -108,7 +109,11 @@ class QuizImpl implements Quizable {
             played++;
         }
 
-        System.out.println(correct+"/"+played);
+        System.out.println("Thankyou for playing quiz game!");
+        System.out.println("You scored: "+correct + " out of " + played);
+        System.out.println("--------------------------------------------------");
+        System.out.println("");
+
 
     }
 
@@ -120,6 +125,7 @@ class QuizImpl implements Quizable {
     }
 
     private void manageQuiz() {
+        System.out.println("--------------------------------------------------");
         System.out.println("********Manage Quiz********");
         System.out.println("Press '1' to Add a Questions");
         System.out.println("Press '2' to View All Questions");
@@ -151,22 +157,34 @@ class QuizImpl implements Quizable {
                 }
                 break;
             case 3:
+            System.out.println("--------------------------------------------------");
                 System.out.print("Enter question ID: ");
                 try {
                     int id = Integer.parseInt(scanner.nextLine());
-                    questionRepository.getById(id);
+                    Question[] question1 = questionRepository.getById(id);
+                    for (Question question : question1) {
+                        System.out.println(question);
+                    }
+                    break;
                 } catch (Exception e) {
-                    System.out.println("Invalid input. Please enter a valid question ID.");
+                    System.out.println("There is no valid question ID.");
+                    System.out.println("--------------------------------------------------");
+
                 }
                 break;
             case 4:
+            System.out.println("--------------------------------------------------");
                 System.out.print("Enter question ID to delete: ");
                 try {
                     int id = Integer.parseInt(scanner.nextLine());
                     questionRepository.deleteById(id);
+                    System.out.println("--------------------------------------------------");
                     System.out.println("Question deleted successfully.");
+                    System.out.println("--------------------------------------------------");
                 } catch (Exception e) {
+                    System.out.println("--------------------------------------------------");
                     System.out.println("Invalid input. Please enter a valid question ID.");
+                    System.out.println("--------------------------------------------------");
                 }
                 break;
             case 5:
@@ -192,7 +210,7 @@ class QuizImpl implements Quizable {
     public void addQuestions() {
         while (true) {
             System.out.println("--------------------------------------------------");
-            System.out.print("Enter your question or Q to go back: ");
+            System.out.print("Enter your question or 'Q' to go back: ");
 
             Question question = new Question();
 
@@ -206,7 +224,9 @@ class QuizImpl implements Quizable {
                 isValidText(text);
                 question.setQuestionText(text);
             } catch (Exception e) {
+                System.out.println("--------------------------------------------------");
                 System.out.println("Invalid input. Please enter a valid question.");
+                System.out.println("--------------------------------------------------");
                 continue;
             }
 
@@ -214,7 +234,7 @@ class QuizImpl implements Quizable {
             int optionId = 1;
             while (true) {
 
-                if (handleOption(dynamicOptionArray,optionId)) {
+                if (handleOption(dynamicOptionArray, optionId)) {
                     break;
                 } else {
                     optionId++;
@@ -230,7 +250,7 @@ class QuizImpl implements Quizable {
         Option option = new Option();
         option.setId(optionId);
         try {
-            System.out.print("Enter your option or Q to go back: ");
+            System.out.print("Enter your option or 'Q' to go back: ");
             String text = scanner.nextLine();
 
             if (hasQ(text))
@@ -240,12 +260,14 @@ class QuizImpl implements Quizable {
             option.setName(text);
 
         } catch (Exception e) {
+            System.out.println("--------------------------------------------------");
             System.out.println("Invalid input. Please enter a valid option.");
+            System.out.println("--------------------------------------------------");
             return false;
         }
 
         try {
-            System.out.print("Correct option?: ");
+            System.out.print("Correct option: ");
             String text = scanner.nextLine();
             if (hasQ(text))
                 return true;
@@ -261,7 +283,9 @@ class QuizImpl implements Quizable {
             }
 
         } catch (Exception e) {
+            System.out.println("--------------------------------------------------");
             System.out.println("Invalid input. Please enter a valid value (y/n).");
+            System.out.println("--------------------------------------------------");
             return false;
         }
 

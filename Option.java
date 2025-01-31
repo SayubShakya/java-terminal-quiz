@@ -1,7 +1,9 @@
 class Option {
 
     private int id;
-    
+    private String name; // options haru
+    private boolean isCorrect; // option correct wala -T/F?
+
     public int getId() {
         return id;
     }
@@ -10,16 +12,9 @@ class Option {
         this.id = id;
     }
 
-
-
-    private String name; // options haru
     public void setName(String name) {
         this.name = name;
     }
-
-    
-
-    private boolean isCorrect; // option correct wala -T/F?
 
     public void setCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
@@ -31,7 +26,6 @@ class Option {
     public String getName() {
         return name;
     }
-    
 
     public boolean isCorrect() {
         return isCorrect;

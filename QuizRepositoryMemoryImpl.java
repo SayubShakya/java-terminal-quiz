@@ -14,11 +14,10 @@ public class QuizRepositoryMemoryImpl implements QuestionRepository {
     }
 
     @Override
-    public Question getById(int id) {
+    public Question[] getById(int id) {
         for (int i = 0; i < questions.getAll().length; i++) {
             Question question = questions.get(i);
             if (question.getId() == id) {
-                return question;
             }
         }
         return null;
@@ -26,7 +25,6 @@ public class QuizRepositoryMemoryImpl implements QuestionRepository {
 
     @Override
     public boolean deleteById(int id) {
-        System.out.println("Not available");
         return false;
     }
 
