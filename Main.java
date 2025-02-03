@@ -1,6 +1,16 @@
+import game.Gameable;
+import game.impl.GameableQuizImpl;
+import repository.impl.QuizRepositoryFileImpl;
+import util.converter.impl.JavaObjectConverterUtilJavaImpl;
+import util.converter.impl.JavaObjectConverterUtilSayubImpl;
+
 public class Main {
+
     public static void main(String[] args) {
-        Quizable quizable = new QuizImpl(new QuizRepositoryMemoryImpl());
-        quizable.menu();
+        startGame(new GameableQuizImpl(new QuizRepositoryFileImpl(new JavaObjectConverterUtilSayubImpl())));
+    }
+
+    public static void startGame(Gameable gameable) {
+        gameable.menu();
     }
 }

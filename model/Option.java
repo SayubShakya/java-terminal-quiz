@@ -1,8 +1,15 @@
-class Option {
+package model;
+
+import java.io.Serializable;
+
+public class Option implements Serializable {
 
     private int id;
     private String name; // options haru
     private boolean isCorrect; // option correct wala -T/F?
+
+    public Option() {
+    }
 
     public int getId() {
         return id;
@@ -12,23 +19,20 @@ class Option {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCorrect(boolean isCorrect) {
-        this.isCorrect = isCorrect;
-    }
-
-    public Option() {
-    }
-
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public boolean isCorrect() {
         return isCorrect;
+    }
+
+    public void setCorrect(boolean isCorrect) {
+        this.isCorrect = isCorrect;
     }
 
     @Override

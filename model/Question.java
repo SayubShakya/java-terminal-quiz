@@ -1,12 +1,14 @@
-class Question {
+package model;
+
+import array.DynamicOptionArray;
+
+import java.io.Serializable;
+
+public class Question implements Serializable {
     private static int idTracker = 1;
     private int id;
     private String questionText;
     private DynamicOptionArray options;
-
-    public void setOptions(DynamicOptionArray options) {
-        this.options = options;
-    }
 
     public Question() {
         this.id = idTracker++;
@@ -28,13 +30,17 @@ class Question {
         return options;
     }
 
+    public void setOptions(DynamicOptionArray options) {
+        this.options = options;
+    }
+
     public boolean isCorrectAnswer(int answerIndex) {
         return options.get(answerIndex).isCorrect();
     }
 
     @Override
     public String toString() {
-        return "Question " + id + ":" + questionText + ", options =" + options;
+        return "model.Question " + id + ":" + questionText + ", options =" + options;
     }
 
 }

@@ -1,6 +1,12 @@
+package repository.impl;
+
+import array.DynamicQuestionArray;
+import model.Question;
+import repository.QuestionRepository;
+
 public class QuizRepositoryMemoryImpl implements QuestionRepository {
 
-    private DynamicQuestionArray questions = new DynamicQuestionArray();
+    protected DynamicQuestionArray questions = new DynamicQuestionArray();
 
     @Override
     public boolean save(Question question) {

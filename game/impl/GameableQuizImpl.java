@@ -1,10 +1,18 @@
+package game.impl;
+
+import array.DynamicOptionArray;
+import game.Gameable;
+import model.Option;
+import model.Question;
+import repository.QuestionRepository;
+
 import java.util.Scanner;
 
-class QuizImpl implements Quizable {
+public class GameableQuizImpl implements Gameable {
     private QuestionRepository questionRepository;
     private Scanner scanner = new Scanner(System.in);
 
-    public QuizImpl(QuestionRepository questionRepository) {
+    public GameableQuizImpl(QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
     }
 
@@ -72,7 +80,7 @@ class QuizImpl implements Quizable {
 
         for (Question question : questions) {
 
-            System.out.println("Question: " + question.getId() + ". "+ question.getQuestionText());
+            System.out.println("model.Question: " + question.getId() + ". " + question.getQuestionText());
 
             for (Option option : question.getOptions().getAll()) {
                 System.out.println(option.getId() + ". " + option.getName());
@@ -110,7 +118,7 @@ class QuizImpl implements Quizable {
         }
 
         System.out.println("Thankyou for playing quiz game!");
-        System.out.println("You scored: "+correct + " out of " + played);
+        System.out.println("You scored: " + correct + " out of " + played);
         System.out.println("--------------------------------------------------");
         System.out.println("");
 
@@ -129,8 +137,8 @@ class QuizImpl implements Quizable {
         System.out.println("********Manage Quiz********");
         System.out.println("Press '1' to Add a Questions");
         System.out.println("Press '2' to View All Questions");
-        System.out.println("Press '3' to View a Question by ID");
-        System.out.println("Press '4' to Delete a Question");
+        System.out.println("Press '3' to View a model.Question by ID");
+        System.out.println("Press '4' to Delete a model.Question");
         System.out.println("Press '5' to Go Back to Menu");
         System.out.println("***************************");
 
@@ -152,12 +160,15 @@ class QuizImpl implements Quizable {
                 break;
             case 2:
                 Question[] questions = questionRepository.getAll();
-                for (Question question : questions) {
-                    System.out.println(question);
+                if(questions != null) {
+                    for (Question question : questions) {
+                        System.out.println(question);
+                    }
                 }
+
                 break;
             case 3:
-            System.out.println("--------------------------------------------------");
+                System.out.println("--------------------------------------------------");
                 System.out.print("Enter question ID: ");
                 try {
                     int id = Integer.parseInt(scanner.nextLine());
@@ -173,13 +184,13 @@ class QuizImpl implements Quizable {
                 }
                 break;
             case 4:
-            System.out.println("--------------------------------------------------");
+                System.out.println("--------------------------------------------------");
                 System.out.print("Enter question ID to delete: ");
                 try {
                     int id = Integer.parseInt(scanner.nextLine());
                     questionRepository.deleteById(id);
                     System.out.println("--------------------------------------------------");
-                    System.out.println("Question deleted successfully.");
+                    System.out.println("model.Question deleted successfully.");
                     System.out.println("--------------------------------------------------");
                 } catch (Exception e) {
                     System.out.println("--------------------------------------------------");
