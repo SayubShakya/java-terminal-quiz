@@ -1,3 +1,5 @@
+import array.List;
+import array.ListArrayImpl;
 import game.Gameable;
 import game.impl.GameableQuizImpl;
 import repository.impl.QuizRepositoryFileImpl;
@@ -8,6 +10,10 @@ public class Main {
 
     public static void main(String[] args) {
         startGame(new GameableQuizImpl(new QuizRepositoryFileImpl(new JavaObjectConverterUtilSayubImpl())));
+
+        List<String> names = new ListArrayImpl<>();
+
+        names.add("John");
     }
 
     public static void startGame(Gameable gameable) {

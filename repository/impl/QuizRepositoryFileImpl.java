@@ -1,6 +1,6 @@
 package repository.impl;
 
-import array.DynamicQuestionArray;
+import array.ListArrayImpl;
 import model.Question;
 import util.converter.JavaObjectConverterUtil;
 
@@ -8,11 +8,11 @@ public class QuizRepositoryFileImpl extends QuizRepositoryMemoryImpl {
 
     public static final String QUESTIONS = "questions";
 
-    private JavaObjectConverterUtil<DynamicQuestionArray> converter;
+    private JavaObjectConverterUtil<ListArrayImpl> converter;
 
-    public QuizRepositoryFileImpl(JavaObjectConverterUtil<DynamicQuestionArray> converter) {
+    public QuizRepositoryFileImpl(JavaObjectConverterUtil<ListArrayImpl> converter) {
        this.converter = converter;
-        DynamicQuestionArray fileQuestions = converter.deserialize(QUESTIONS);
+        ListArrayImpl fileQuestions = converter.deserialize(QUESTIONS);
         System.out.println(fileQuestions);
         if(fileQuestions != null) {
             questions = fileQuestions;

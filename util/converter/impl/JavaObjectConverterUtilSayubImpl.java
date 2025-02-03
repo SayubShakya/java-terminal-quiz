@@ -1,20 +1,18 @@
 package util.converter.impl;
 
 import array.DynamicOptionArray;
-import array.DynamicQuestionArray;
+import array.ListArrayImpl;
 import model.Option;
 import model.Question;
 import util.converter.JavaObjectConverterUtil;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 
 // What is capital of Nepal?##KTM,BKT,PKR,##1,
-public class JavaObjectConverterUtilSayubImpl implements JavaObjectConverterUtil<DynamicQuestionArray> {
+public class JavaObjectConverterUtilSayubImpl implements JavaObjectConverterUtil<ListArrayImpl> {
 
     private static final String FILE_SUFFIX = ".txt";
     private static final String SEPARATOR = "##";
@@ -22,7 +20,7 @@ public class JavaObjectConverterUtilSayubImpl implements JavaObjectConverterUtil
 
 
     @Override
-    public void serialize(DynamicQuestionArray object, String fileName) {
+    public void serialize(ListArrayImpl object, String fileName) {
         File file = new File(fileName + FILE_SUFFIX);
         try {
             if (!file.exists()) {
@@ -63,8 +61,8 @@ public class JavaObjectConverterUtilSayubImpl implements JavaObjectConverterUtil
     }
 
     @Override
-    public DynamicQuestionArray deserialize(String fileName) {
-        DynamicQuestionArray questions = new DynamicQuestionArray();
+    public ListArrayImpl deserialize(String fileName) {
+        ListArrayImpl questions = new ListArrayImpl();
 
         try {
             Scanner sc = new Scanner(new File(fileName + FILE_SUFFIX));
