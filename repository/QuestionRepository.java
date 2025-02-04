@@ -2,12 +2,14 @@ package repository;
 
 import model.Question;
 
+import java.util.List;
+
 public interface QuestionRepository {
     boolean save(Question question);
 
-    Question[] getAll();
+    List<Question> getAll();
 
-    Question[] getById(int id);
+    Question getById(int id);
 
     boolean deleteById(int id);
 }

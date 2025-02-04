@@ -1,19 +1,24 @@
 package game.impl;
 
-import array.DynamicOptionArray;
-import game.Gameable;
+import game.*;
 import model.Option;
 import model.Question;
+import model.Score;
 import repository.QuestionRepository;
+import repository.ScoreRepository;
+import util.DateUtil;
 
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-public class GameableQuizImpl implements Gameable {
-    private QuestionRepository questionRepository;
-    private Scanner scanner = new Scanner(System.in);
+public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitable, Scoreable {
+    private final QuestionRepository questionRepository;
+    private final ScoreRepository scoreRepository;
+    private final Scanner scanner = new Scanner(System.in);
 
-    public GameableQuizImpl(QuestionRepository questionRepository) {
+    public GameableQuizImpl(QuestionRepository questionRepository, ScoreRepository scoreRepository) {
         this.questionRepository = questionRepository;
+        this.scoreRepository = scoreRepository;
     }
 
     @Override
@@ -27,7 +32,8 @@ public class GameableQuizImpl implements Gameable {
         System.out.println("********Menu********");
         System.out.println("Press '1' to Start Quiz");
         System.out.println("Press '2' to Manage Quiz");
-        System.out.println("Press '3' to Quit Quiz");
+        System.out.println("Press '3' to High Score");
+        System.out.println("Press '4' to Quit Quiz");
         System.out.println("********************");
 
         System.out.print("Enter your choice: ");
@@ -44,14 +50,19 @@ public class GameableQuizImpl implements Gameable {
 
         switch (choice) {
             case 1:
-                startGame();
+                start();
                 break;
             case 2:
-                manageGame();
+                manage();
                 break;
+
             case 3:
-                quitGame();
+                highScore();
                 break;
+            case 4:
+                quit();
+                break;
+
             default:
                 System.out.println("--------------------------------------------------");
                 System.out.println("Invalid choice. Please select according to the menu.");
@@ -61,12 +72,12 @@ public class GameableQuizImpl implements Gameable {
     }
 
     @Override
-    public void startGame() {
+    public void start() {
         int correct = 0;
         int played = 0;
-        Question[] questions = questionRepository.getAll();
-
-        if (questions == null || questions.length == 0) {
+        List<Question> questions = questionRepository.getAll();
+        System.out.println(questions + " questions found.");
+        if (questions == null || questions.isEmpty()) {
             System.out.println("--------------------------------------------------");
             System.out.println("Please add questions before starting the quiz in Manage Quiz.");
             System.out.println("--------------------------------------------------");
@@ -74,15 +85,22 @@ public class GameableQuizImpl implements Gameable {
             return;
         }
 
+        Date start = new Date();
+
         System.out.println("--------------------------------------------------");
         System.out.println("Welcome to the Quiz Game!");
         System.out.println("--------------------------------------------------");
+        System.out.println("Please enter your username: ");
+        String name = scanner.nextLine();
 
+        Score score = new Score();
+        score.setUsername(name);
+        System.out.println(questions.get(0));
         for (Question question : questions) {
 
-            System.out.println("model.Question: " + question.getId() + ". " + question.getQuestionText());
+            System.out.println("Question: " + question.getId() + ". " + question.getQuestionText());
 
-            for (Option option : question.getOptions().getAll()) {
+            for (Option option : question.getOptions()) {
                 System.out.println(option.getId() + ". " + option.getName());
             }
 
@@ -91,10 +109,10 @@ public class GameableQuizImpl implements Gameable {
                     System.out.print("Your answer: ");
                     int choice = Integer.parseInt(scanner.nextLine());
                     System.out.println("--------------------------------------------------");
-                    System.out.println("");
+                    System.out.println();
                     Option chosenOption = null;
 
-                    for (Option option : question.getOptions().getAll()) {
+                    for (Option option : question.getOptions()) {
                         if (option.getId() == choice) {
                             chosenOption = option;
                         }
@@ -120,13 +138,18 @@ public class GameableQuizImpl implements Gameable {
         System.out.println("Thankyou for playing quiz game!");
         System.out.println("You scored: " + correct + " out of " + played);
         System.out.println("--------------------------------------------------");
-        System.out.println("");
+        score.setScore(correct);
 
+        Date end = new Date();
+        score.setTimeInSeconds(DateUtil.getDateDiff(start, end, TimeUnit.SECONDS));
 
+        System.out.println("You took: " + score.getScore() + " seconds");
+
+        scoreRepository.save(score);
     }
 
     @Override
-    public void manageGame() {
+    public void manage() {
         while (true) {
             manageQuiz();
         }
@@ -159,8 +182,8 @@ public class GameableQuizImpl implements Gameable {
                 addQuestions();
                 break;
             case 2:
-                Question[] questions = questionRepository.getAll();
-                if(questions != null) {
+                List<Question> questions = questionRepository.getAll();
+                if (questions != null) {
                     for (Question question : questions) {
                         System.out.println(question);
                     }
@@ -172,10 +195,7 @@ public class GameableQuizImpl implements Gameable {
                 System.out.print("Enter question ID: ");
                 try {
                     int id = Integer.parseInt(scanner.nextLine());
-                    Question[] question1 = questionRepository.getById(id);
-                    for (Question question : question1) {
-                        System.out.println(question);
-                    }
+
                     break;
                 } catch (Exception e) {
                     System.out.println("There is no valid question ID.");
@@ -190,7 +210,7 @@ public class GameableQuizImpl implements Gameable {
                     int id = Integer.parseInt(scanner.nextLine());
                     questionRepository.deleteById(id);
                     System.out.println("--------------------------------------------------");
-                    System.out.println("model.Question deleted successfully.");
+                    System.out.println("Question deleted successfully.");
                     System.out.println("--------------------------------------------------");
                 } catch (Exception e) {
                     System.out.println("--------------------------------------------------");
@@ -210,7 +230,7 @@ public class GameableQuizImpl implements Gameable {
     }
 
     @Override
-    public void quitGame() {
+    public void quit() {
         System.out.println("--------------------------------------------------");
         System.out.println("Thank you for playing the quiz game. Goodbye!");
         System.out.println("--------------------------------------------------");
@@ -241,7 +261,7 @@ public class GameableQuizImpl implements Gameable {
                 continue;
             }
 
-            DynamicOptionArray dynamicOptionArray = new DynamicOptionArray();
+            List<Option> dynamicOptionArray = new ArrayList<>();
             int optionId = 1;
             while (true) {
 
@@ -257,7 +277,7 @@ public class GameableQuizImpl implements Gameable {
         }
     }
 
-    public boolean handleOption(DynamicOptionArray dynamicOptionArray, int optionId) {
+    public boolean handleOption(List<Option> dynamicOptionArray, int optionId) {
         Option option = new Option();
         option.setId(optionId);
         try {
@@ -314,4 +334,9 @@ public class GameableQuizImpl implements Gameable {
         }
     }
 
+    @Override
+    public void highScore() {
+        System.out.println("HIGH SCORE");
+        System.out.println(scoreRepository.getAll());
+    }
 }

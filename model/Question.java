@@ -1,14 +1,17 @@
 package model;
 
-import array.DynamicOptionArray;
-
 import java.io.Serializable;
+import java.util.List;
 
 public class Question implements Serializable {
     private static int idTracker = 1;
     private int id;
     private String questionText;
-    private DynamicOptionArray options;
+    private List<Option> options;
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Question() {
         this.id = idTracker++;
@@ -26,11 +29,11 @@ public class Question implements Serializable {
         this.questionText = text;
     }
 
-    public DynamicOptionArray getOptions() {
+    public List<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(DynamicOptionArray options) {
+    public void setOptions(List<Option> options) {
         this.options = options;
     }
 

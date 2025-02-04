@@ -1,12 +1,14 @@
 package repository.impl;
 
-import array.DynamicQuestionArray;
 import model.Question;
 import repository.QuestionRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class QuizRepositoryMemoryImpl implements QuestionRepository {
 
-    protected DynamicQuestionArray questions = new DynamicQuestionArray();
+    protected List<Question> questions = new ArrayList<>();
 
     @Override
     public boolean save(Question question) {
@@ -15,17 +17,12 @@ public class QuizRepositoryMemoryImpl implements QuestionRepository {
     }
 
     @Override
-    public Question[] getAll() {
-        return questions.getAll();
+    public List<Question> getAll() {
+        return questions;
     }
 
     @Override
-    public Question[] getById(int id) {
-        for (int i = 0; i < questions.getAll().length; i++) {
-            Question question = questions.get(i);
-            if (question.getId() == id) {
-            }
-        }
+    public Question getById(int id) {
         return null;
     }
 

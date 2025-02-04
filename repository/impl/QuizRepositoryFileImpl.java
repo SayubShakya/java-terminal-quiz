@@ -1,18 +1,19 @@
 package repository.impl;
 
-import array.DynamicQuestionArray;
 import model.Question;
 import util.converter.JavaObjectConverterUtil;
+
+import java.util.List;
 
 public class QuizRepositoryFileImpl extends QuizRepositoryMemoryImpl {
 
     public static final String QUESTIONS = "questions";
 
-    private JavaObjectConverterUtil<DynamicQuestionArray> converter;
+    private JavaObjectConverterUtil<List<Question>> converter;
 
-    public QuizRepositoryFileImpl(JavaObjectConverterUtil<DynamicQuestionArray> converter) {
+    public QuizRepositoryFileImpl(JavaObjectConverterUtil<List<Question>> converter) {
        this.converter = converter;
-        DynamicQuestionArray fileQuestions = converter.deserialize(QUESTIONS);
+        List<Question> fileQuestions = converter.deserialize(QUESTIONS);
         System.out.println(fileQuestions);
         if(fileQuestions != null) {
             questions = fileQuestions;
@@ -22,7 +23,7 @@ public class QuizRepositoryFileImpl extends QuizRepositoryMemoryImpl {
     @Override
     public boolean save(Question question) {
         boolean save = super.save(question);
-        converter.serialize(questions, "questions");
+        converter.serialize(questions, QUESTIONS);
         return save;
     }
 }
