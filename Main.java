@@ -6,8 +6,7 @@ import util.converter.impl.JavaObjectWriterUtilQuestionJacksonImplFileJackson;
 import util.converter.impl.JavaObjectWriterUtilScoreJacksonImplFileJackson;
 
 public class Main {
-    @SuppressWarnings("unchecked")
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         startGame(
                 new GameableQuizImpl(
                         new QuizRepositoryFileImpl(

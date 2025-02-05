@@ -39,7 +39,13 @@ public abstract class FileJacksonJsonWriter<T> {
 
     public T deserialize(String fileName) throws JsonProcessingException {
         try {
-            Scanner sc = new Scanner(new File(fileName + FILE_SUFFIX));
+            File file = new File(fileName + FILE_SUFFIX);
+
+            if (!file.exists()) {
+                return null;
+            }
+
+            Scanner sc = new Scanner(file);
             String json = "";
 
             while (sc.hasNextLine()) {
@@ -49,7 +55,7 @@ public abstract class FileJacksonJsonWriter<T> {
             return reader.readValue(json);
 
         } catch (Exception e) {
-            System.out.println("jackson error: " + e.getMessage());
+            System.out.println("Exception: " + e.getMessage());
         }
         return null;
     }
@@ -61,12 +67,7 @@ public abstract class FileJacksonJsonWriter<T> {
         try (FileWriter fw = new FileWriter(fileName + FILE_SUFFIX)) {
 
             if (!file.exists()) {
-                boolean fileCreated = file.createNewFile();
-                if (fileCreated) {
-                    System.out.println("File created");
-                } else {
-                    System.out.println("File not created");
-                }
+                file.createNewFile();
             }
 
             String json = writer.writeValueAsString(object);
@@ -74,7 +75,7 @@ public abstract class FileJacksonJsonWriter<T> {
             fw.write(json);
 
         } catch (Exception e) {
-            System.out.println("Json processing exception");
+            System.out.println("Exception: " + e.getMessage());
         }
     }
 }
