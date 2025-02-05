@@ -160,8 +160,8 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
         System.out.println("********Manage Quiz********");
         System.out.println("Press '1' to Add a Questions");
         System.out.println("Press '2' to View All Questions");
-        System.out.println("Press '3' to View a model.Question by ID");
-        System.out.println("Press '4' to Delete a model.Question");
+        System.out.println("Press '3' to View Question by ID");
+        System.out.println("Press '4' to Delete Question");
         System.out.println("Press '5' to Go Back to Menu");
         System.out.println("***************************");
 

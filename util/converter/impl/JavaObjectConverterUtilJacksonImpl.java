@@ -8,6 +8,8 @@ import util.converter.JavaObjectConverterUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Scanner;
 
 public class JavaObjectConverterUtilJacksonImpl<T> implements JavaObjectConverterUtil<T> {
@@ -42,7 +44,9 @@ public class JavaObjectConverterUtilJacksonImpl<T> implements JavaObjectConverte
     @Override
     public T deserialize(String fileName) {
         try {
-
+            Type superclassType = this.getClass().getGenericSuperclass();
+            Type[] typeArgs =  ((ParameterizedType)superclassType).getActualTypeArguments();
+            System.out.println(superclassType);
             Scanner sc = new Scanner(new File(fileName + FILE_SUFFIX));
             String json = "";
             while (sc.hasNextLine()) {

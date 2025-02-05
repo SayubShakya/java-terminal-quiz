@@ -43,7 +43,7 @@ public class Question implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Question " + id + ":" + questionText + ", options =" + options;
+        return "Question " + id + ":" + questionText + ", options =" + options;
     }
 
 }
