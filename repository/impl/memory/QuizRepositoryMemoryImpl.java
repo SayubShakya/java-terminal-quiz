@@ -1,4 +1,4 @@
-package repository.impl;
+package repository.impl.memory;
 
 import model.Question;
 import repository.QuestionRepository;

@@ -1,13 +1,13 @@
-package util.converter.impl;
+package converter.impl;
 
-import util.converter.JavaObjectConverterUtil;
+import converter.JavaObjectFileConverter;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class JavaObjectConverterUtilJavaImpl<T> implements JavaObjectConverterUtil<T> {
+public class JavaObjectFileConverterJavaImpl<T> implements JavaObjectFileConverter<T> {
 
     private static final String FILE_SUFFIX = ".obj";
 
@@ -26,9 +26,8 @@ public class JavaObjectConverterUtilJavaImpl<T> implements JavaObjectConverterUt
 
     @Override
     public T deserialize(String fileName) {
-        try (FileInputStream fileInputStream = new FileInputStream(fileName + FILE_SUFFIX);
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-
+        try (FileInputStream fileInputStream = new FileInputStream(fileName + FILE_SUFFIX)) {
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             T object = (T) objectInputStream.readObject();
 
             objectInputStream.close();

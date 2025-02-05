@@ -1,4 +1,4 @@
-package repository.impl;
+package repository.impl.memory;
 
 import model.Score;
 import repository.ScoreRepository;

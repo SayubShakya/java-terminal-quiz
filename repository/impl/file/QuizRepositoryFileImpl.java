@@ -1,0 +1,33 @@
+package repository.impl.file;
+
+import converter.JavaObjectFileConverter;
+import model.Question;
+import repository.impl.memory.QuizRepositoryMemoryImpl;
+
+import java.util.List;
+
+public class QuizRepositoryFileImpl extends QuizRepositoryMemoryImpl {
+
+    public static final String FILE_NAME = "questions";
+
+    private final JavaObjectFileConverter<List<Question>> converter;
+
+    public QuizRepositoryFileImpl(JavaObjectFileConverter<List<Question>> converter) {
+        this.converter = converter;
+        fetchExistingQuestionsFromFile(converter);
+    }
+
+    private void fetchExistingQuestionsFromFile(JavaObjectFileConverter<List<Question>> converter) {
+        List<Question> questions = converter.deserialize(FILE_NAME);
+        if (questions != null) {
+            this.questions = questions;
+        }
+    }
+
+    @Override
+    public boolean save(Question question) {
+        boolean save = super.save(question);
+        converter.serialize(questions, FILE_NAME);
+        return save;
+    }
+}

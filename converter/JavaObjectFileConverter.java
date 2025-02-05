@@ -1,6 +1,6 @@
-package util.converter;
+package converter;
 
-public interface JavaObjectConverterUtil<T> {
+public interface JavaObjectFileConverter<T> {
 
     void serialize(T object, String fileName);
 
