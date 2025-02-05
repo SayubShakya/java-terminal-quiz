@@ -2,8 +2,6 @@ package util.converter.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import util.converter.JavaObjectConverterUtil;
 
 import java.io.File;
@@ -11,7 +9,6 @@ import java.io.FileWriter;
 import java.util.Scanner;
 
 public class JavaObjectWriterUtilJacksonImplFileJackson<T> implements JavaObjectConverterUtil<T> {
-
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String FILE_SUFFIX = ".json";
@@ -31,8 +28,7 @@ public class JavaObjectWriterUtilJacksonImplFileJackson<T> implements JavaObject
             if (!file.exists()) {
                 file.createNewFile();
             }
-            ObjectWriter writer = MAPPER.writerFor(typeReference);
-            String json = writer.writeValueAsString(object);
+            String json = MAPPER.writeValueAsString(object);
 
             fw.write(json);
 
@@ -43,7 +39,6 @@ public class JavaObjectWriterUtilJacksonImplFileJackson<T> implements JavaObject
 
     @Override
     public T deserialize(String fileName) {
-        ObjectReader reader = MAPPER.readerFor(typeReference);
         try {
             File file = new File(fileName + FILE_SUFFIX);
 
@@ -58,7 +53,7 @@ public class JavaObjectWriterUtilJacksonImplFileJackson<T> implements JavaObject
                 json += sc.nextLine();
             }
 
-            return reader.readValue(json);
+            return MAPPER.readValue(json, typeReference);
 
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
