@@ -1,0 +1,2 @@
+javac src/com/sayub/Main.java -cp C:\Users\acer\Desktop\terminalquizapplication\dependency\*  -sourcepath src -d build/classes
+java -cp "C:\Users\acer\Desktop\terminalquizapplication\dependency\*;C:\Users\acer\Desktop\terminalquizapplication\build\classes" com.sayub.Main
