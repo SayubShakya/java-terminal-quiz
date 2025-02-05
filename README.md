@@ -1,23 +1,7 @@
 # Terminal based quiz application
 
 ```bash
-javac Main.java && java Main
-
+javac src/com/sayub/Main.java -cp ".:/<your_path>/dependency/*" -sourcepath src -d build/classes 
+java -cp ".:/<your_path>/dependency/*:/<your_path>//build/classes" com.sayub.Main 
 ```
-
-git commit --amend
-
-vim terminal
-
-> Enable Insertion:
-> Shift+i
-
-> Exit Vim Commands:
-> Esc
-
-> Write Vim Commands:
-> Shift+:
-
-> Write and quit:
-> wq
 
