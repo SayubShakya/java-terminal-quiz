@@ -1,0 +1,1 @@
+javac src/com/sayub/Main.java -cp ".:dependencies/*" -sourcepath src -d build/classes && java -cp ".:dependencies/*:build/classes" com.sayub.Main
