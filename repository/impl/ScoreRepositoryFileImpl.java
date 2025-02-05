@@ -12,12 +12,14 @@ public class ScoreRepositoryFileImpl extends ScoreRepositoryMemoryImpl {
     private JavaObjectConverterUtil<List<Score>> converter;
 
     public ScoreRepositoryFileImpl(JavaObjectConverterUtil<List<Score>> converter) {
-       this.converter = converter;
+        this.converter = converter;
         List<Score> fileScores = converter.deserialize(HIGH_SCORE);
-        System.out.println(fileScores);
-        if(fileScores != null) {
+
+        if (fileScores != null) {
             scores = fileScores;
         }
+
+        System.out.println("score size: " + scores.size());
     }
 
     @Override

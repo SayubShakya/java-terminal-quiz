@@ -14,10 +14,10 @@ public class QuizRepositoryFileImpl extends QuizRepositoryMemoryImpl {
     public QuizRepositoryFileImpl(JavaObjectConverterUtil<List<Question>> converter) {
        this.converter = converter;
         List<Question> fileQuestions = converter.deserialize(QUESTIONS);
-        System.out.println(fileQuestions);
         if(fileQuestions != null) {
             questions = fileQuestions;
         }
+        System.out.println("question size: "+questions.size());
     }
 
     @Override

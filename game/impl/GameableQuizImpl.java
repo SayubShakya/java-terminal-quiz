@@ -1,6 +1,10 @@
 package game.impl;
 
-import game.*;
+import game.Manageable;
+import game.Menuable;
+import game.Quitable;
+import game.Scoreable;
+import game.Startable;
 import model.Option;
 import model.Question;
 import model.Score;
@@ -8,7 +12,10 @@ import repository.QuestionRepository;
 import repository.ScoreRepository;
 import util.DateUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitable, Scoreable {
@@ -76,7 +83,6 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
         int correct = 0;
         int played = 0;
         List<Question> questions = questionRepository.getAll();
-        System.out.println(questions + " questions found.");
         if (questions == null || questions.isEmpty()) {
             System.out.println("--------------------------------------------------");
             System.out.println("Please add questions before starting the quiz in Manage Quiz.");
@@ -95,7 +101,6 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
 
         Score score = new Score();
         score.setUsername(name);
-        System.out.println(questions.get(0));
         for (Question question : questions) {
 
             System.out.println("Question: " + question.getId() + ". " + question.getQuestionText());
@@ -336,7 +341,12 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
 
     @Override
     public void highScore() {
-        System.out.println("HIGH SCORE");
-        System.out.println(scoreRepository.getAll());
+        System.out.println("--------------------------------------------------");
+        System.out.println("Username         Score          TimeInSeconds");
+        for (Score score : scoreRepository.getAll()) {
+            System.out.println("--------------------------------------------------");
+            System.out.printf("%s              %d                %d\n", score.getUsername(), score.getScore(), score.getTimeInSeconds());
+            System.out.println("--------------------------------------------------");
+        }
     }
 }
