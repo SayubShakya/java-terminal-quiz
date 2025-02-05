@@ -28,7 +28,7 @@ public class JavaObjectFileConverterJacksonImpl<T> implements JavaObjectFileConv
             if (!file.exists()) {
                 file.createNewFile();
             }
-            String json = MAPPER.writeValueAsString(object);
+            String json = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
 
             fw.write(json);
 
@@ -39,13 +39,13 @@ public class JavaObjectFileConverterJacksonImpl<T> implements JavaObjectFileConv
 
     @Override
     public T deserialize(String fileName) {
-        try {
-
-            try (FileInputStream fileInputStream = new FileInputStream(fileName + FILE_SUFFIX)) {
-                String json = new String(fileInputStream.readAllBytes());
-                return MAPPER.readValue(json, typeReference);
+        try (FileInputStream fileInputStream = new FileInputStream(fileName + FILE_SUFFIX)) {
+            byte[] dataInBytes = fileInputStream.readAllBytes();
+            if(dataInBytes.length == 0){
+                return null;
             }
-
+            String json = new String(dataInBytes);
+            return MAPPER.readValue(json, typeReference);
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }

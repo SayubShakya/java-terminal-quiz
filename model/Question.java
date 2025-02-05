@@ -6,7 +6,7 @@ import java.util.List;
 public class Question implements Serializable {
     private static int idTracker = 1;
     private int id;
-    private String questionText;
+    private String title;
     private List<Option> options;
 
     public void setId(int id) {
@@ -21,12 +21,12 @@ public class Question implements Serializable {
         return id;
     }
 
-    public String getQuestionText() {
-        return questionText;
+    public String getTitle() {
+        return title;
     }
 
-    public void setQuestionText(String text) {
-        this.questionText = text;
+    public void setTitle(String text) {
+        this.title = text;
     }
 
     public List<Option> getOptions() {
@@ -43,7 +43,7 @@ public class Question implements Serializable {
 
     @Override
     public String toString() {
-        return "Question " + id + ":" + questionText + ", options =" + options;
+        return "Question " + id + ":" + title + ", options =" + options;
     }
 
 }

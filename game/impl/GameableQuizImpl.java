@@ -103,7 +103,7 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
         score.setUsername(name);
         for (Question question : questions) {
 
-            System.out.println("Question: " + question.getId() + ". " + question.getQuestionText());
+            System.out.println("Question: " + question.getId() + ". " + question.getTitle());
 
             for (Option option : question.getOptions()) {
                 System.out.println(option.getId() + ". " + option.getName());
@@ -258,7 +258,7 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
                 }
 
                 isValidText(text);
-                question.setQuestionText(text);
+                question.setTitle(text);
             } catch (Exception e) {
                 System.out.println("--------------------------------------------------");
                 System.out.println("Invalid input. Please enter a valid question.");
