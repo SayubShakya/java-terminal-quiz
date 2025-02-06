@@ -237,7 +237,7 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
     @Override
     public void quit() {
         System.out.println("--------------------------------------------------");
-        System.out.println("Thank you for playing the quiz com.sayub.game. Goodbye!");
+        System.out.println("Thank you for playing quiz. Goodbye!");
         System.out.println("--------------------------------------------------");
         scanner.close();
         System.exit(0);

@@ -6,6 +6,7 @@ import com.sayub.converter.JavaObjectFileConverter;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 
 public class JavaObjectFileConverterJacksonImpl<T> implements JavaObjectFileConverter<T> {
@@ -23,14 +24,19 @@ public class JavaObjectFileConverterJacksonImpl<T> implements JavaObjectFileConv
 
         File file = new File(fileName + FILE_SUFFIX);
 
-        try (FileWriter fw = new FileWriter(fileName + FILE_SUFFIX)) {
+        try {
 
             if (!file.exists()) {
                 file.createNewFile();
             }
-            String json = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
 
-            fw.write(json);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            
+            String json = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+            byte[] dataInBytes = json.getBytes();
+            fileOutputStream.write(dataInBytes);
+
+            fileOutputStream.close();
 
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
@@ -39,17 +45,27 @@ public class JavaObjectFileConverterJacksonImpl<T> implements JavaObjectFileConv
 
     @Override
     public T deserialize(String fileName) {
-        try (FileInputStream fileInputStream = new FileInputStream(fileName + FILE_SUFFIX)) {
+
+        try {
+
+            FileInputStream fileInputStream = new FileInputStream(fileName + FILE_SUFFIX);
+
             byte[] dataInBytes = fileInputStream.readAllBytes();
+
             if(dataInBytes.length == 0){
                 return null;
             }
+
             String json = new String(dataInBytes);
+
+            fileInputStream.close();
+
             return MAPPER.readValue(json, typeReference);
+
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
+            return null;
         }
-        return null;
+
     }
 }
-
