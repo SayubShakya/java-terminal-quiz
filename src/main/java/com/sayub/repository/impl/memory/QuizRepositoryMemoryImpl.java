@@ -1,5 +1,6 @@
 package com.sayub.repository.impl.memory;
 
+import com.sayub.model.Option;
 import com.sayub.model.Question;
 import com.sayub.repository.QuestionRepository;
 
@@ -27,8 +28,7 @@ public class QuizRepositoryMemoryImpl implements QuestionRepository {
     }
 
     @Override
-    public boolean deleteById(int id) {
-        return false;
+    public void deleteById(int id) {
     }
 
 }

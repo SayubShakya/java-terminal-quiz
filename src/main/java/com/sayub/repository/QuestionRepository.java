@@ -11,5 +11,7 @@ public interface QuestionRepository {
 
     Question getById(int id);
 
-    boolean deleteById(int id);
+    void deleteById(int id);
+
 }
+
