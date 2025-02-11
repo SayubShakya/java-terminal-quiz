@@ -17,7 +17,7 @@ public class ScoreRepositoryDatabaseImpl implements ScoreRepository {
         List<Score> scores = new ArrayList<>();
 
         try (Connection conn = DatabaseConnector.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Score.GETALL);
+             PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Score.GET_ALL);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {

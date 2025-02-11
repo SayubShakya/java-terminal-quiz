@@ -1,6 +1,10 @@
 package com.sayub.db;
 
+import com.sayub.db.update.QueryParamMapper;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseConnector {
 
@@ -133,4 +137,111 @@ public class DatabaseConnector {
 
         return new int[0];
     }
+
+
+    public static <I> int[] updateBulk(String sql, I value, QueryParamMapper<I, Object[][]> queryParamMapper) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            connection = getConnection();
+            preparedStatement = getPreparedStatement(connection, sql);
+            Object[][] bulkParam = queryParamMapper.map(value);
+
+            for (Object[] params : bulkParam) {
+
+                int paramCounter = 1;
+
+                for (Object param : params) {
+                    preparedStatement.setObject(paramCounter++, param);
+                }
+
+                preparedStatement.addBatch();
+            }
+
+            int[] rowsAffected = preparedStatement.executeBatch();
+
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+
+            if (rowsAffected.length != bulkParam.length) {
+
+                System.out.println("Update persist size is less than the data provided");
+
+            } else {
+
+                int[] idArray = new int[bulkParam.length];
+
+                for (int i = 0; i < idArray.length; i++) {
+
+                    if (generatedKeys.next()) {
+
+                        idArray[i] = generatedKeys.getInt(1);
+
+                    }
+
+                }
+
+                return idArray;
+            }
+
+        } catch (Exception e) {
+
+            System.out.printf("######## Error updating query: %s", sql);
+            System.out.println(e.getMessage());
+
+        } finally {
+
+            close(connection, preparedStatement);
+
+        }
+
+        return new int[0];
+    }
+
+    public static <T> List<T> queryAll(String sql, RowMapper<T> rowMapper, Object... params ) {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            connection = getConnection();
+            preparedStatement = getPreparedStatement(connection, sql);
+
+            int paramCounter = 1;
+            for (Object param : params) {
+
+                preparedStatement.setObject(paramCounter++, param);
+
+            }
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<T> list = new ArrayList<>();
+
+            while(resultSet.next()) {
+               T object = rowMapper.map(resultSet);
+               list.add(object);
+            }
+
+            return list;
+
+        } catch (Exception e) {
+
+            System.out.printf("######## Error fetching: %s", sql);
+            System.out.println(e.getMessage());
+
+        } finally {
+
+            close(connection, preparedStatement);
+
+        }
+
+        return new ArrayList<>();
+    }
+
+
+
+
 }
