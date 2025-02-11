@@ -3,14 +3,10 @@ package com.sayub.model;
 import java.io.Serializable;
 
 public class Score implements Serializable {
-
     private int id;
-
     private String username;
-
     private int score;
-
-    private long timeInSeconds;
+    private int timeInSeconds;
 
     public int getId() {
         return id;
@@ -36,11 +32,11 @@ public class Score implements Serializable {
         this.score = score;
     }
 
-    public long getTimeInSeconds() {
+    public int getTimeInSeconds() {
         return timeInSeconds;
     }
 
-    public void setTimeInSeconds(long timeInSeconds) {
+    public void setTimeInSeconds(int timeInSeconds) {
         this.timeInSeconds = timeInSeconds;
     }
 

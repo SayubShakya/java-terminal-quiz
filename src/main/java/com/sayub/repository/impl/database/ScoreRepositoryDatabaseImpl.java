@@ -16,39 +16,38 @@ public class ScoreRepositoryDatabaseImpl implements ScoreRepository {
     public List<Score> getAll() {
         List<Score> scores = new ArrayList<>();
 
-        try {
-            Connection conn = DatabaseConnector.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Score.GETALL);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Score.GETALL);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Score score = new Score();
                 score.setId(resultSet.getInt("id"));
                 score.setUsername(resultSet.getString("username"));
                 score.setScore(resultSet.getInt("score"));
-                score.setTimeInSeconds(resultSet.getLong("time_in_seconds"));
+                score.setTimeInSeconds(resultSet.getInt("time_in_second"));
                 scores.add(score);
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error fetching scores: " + e.getMessage());
         }
         return scores;
     }
 
     @Override
     public boolean save(Score score) {
-        try {
-            Connection conn = DatabaseConnector.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Score.SAVE);
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Score.SAVE)) {
 
-            preparedStatement.setString(2, score.getUsername());
-            preparedStatement.setInt(3, score.getScore());
-            preparedStatement.setLong(4, score.getTimeInSeconds());
+            preparedStatement.setString(1, score.getUsername());
+            preparedStatement.setInt(2, score.getScore());
+            preparedStatement.setInt(3, score.getTimeInSeconds());
 
             int rowAffected = preparedStatement.executeUpdate();
+            return rowAffected > 0;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error saving score: " + e.getMessage());
+            return false;
         }
-        return true;
     }
 }

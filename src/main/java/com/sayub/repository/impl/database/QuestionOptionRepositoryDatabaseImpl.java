@@ -19,7 +19,6 @@ public class QuestionOptionRepositoryDatabaseImpl implements QuestionOptionRepos
             preparedStatement.setInt(1, questionOption.getQuestionId());
             preparedStatement.setInt(2, questionOption.getOptionId());
 
-
             int rowAffected = preparedStatement.executeUpdate();
 
             if (rowAffected > 0) {
@@ -40,6 +39,5 @@ public class QuestionOptionRepositoryDatabaseImpl implements QuestionOptionRepos
             System.out.println(e.getMessage());
         }
         return false;
-
     }
 }

@@ -91,6 +91,7 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
             return;
         }
 
+
         Date start = new Date();
 
         System.out.println("--------------------------------------------------");
@@ -102,8 +103,13 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
         Score score = new Score();
         score.setUsername(name);
         for (Question question : questions) {
-
             System.out.println("Question: " + question.getId() + ". " + question.getTitle());
+
+
+            if (question.getOptions() == null || question.getOptions().isEmpty()) {
+                System.out.println("No options available.");
+                continue;
+            }
 
             for (Option option : question.getOptions()) {
                 System.out.println(option.getId() + ". " + option.getName());
@@ -140,15 +146,16 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
             played++;
         }
 
-        System.out.println("Thankyou for playing quiz com.sayub.game!");
+        System.out.println("Thank you for playing the quiz game!");
         System.out.println("You scored: " + correct + " out of " + played);
         System.out.println("--------------------------------------------------");
         score.setScore(correct);
 
         Date end = new Date();
-        score.setTimeInSeconds(DateUtil.getDateDiff(start, end, TimeUnit.SECONDS));
+        long timeTaken = (end.getTime() - start.getTime()) / 1000;
+        score.setTimeInSeconds((int) timeTaken);
 
-        System.out.println("You took: " + score.getScore() + " seconds");
+        System.out.println("You took: " + timeTaken + " seconds");
 
         scoreRepository.save(score);
     }

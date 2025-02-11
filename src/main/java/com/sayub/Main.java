@@ -23,8 +23,9 @@ public class Main {
 
         startGame(
                 new GameableQuizImpl(
-                        new QuestionRepositoryDatabaseImpl(new OptionRepositoryDatabaseImpl(), new QuestionOptionRepositoryDatabaseImpl()
-                        ),
+                        new QuestionRepositoryDatabaseImpl(
+                                new OptionRepositoryDatabaseImpl(),
+                                new QuestionOptionRepositoryDatabaseImpl()),
                         new ScoreRepositoryDatabaseImpl()
                 )
         );

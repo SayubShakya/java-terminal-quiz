@@ -75,12 +75,39 @@ public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
                 Question question = new Question();
                 question.setId(resultSet.getInt("id"));
                 question.setTitle(resultSet.getString("title"));
+
+
+
+                List<Option> options = getOptionsForQuestion(question.getId(), conn);
+                question.setOptions(options); //******************
+
                 questions.add(question);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return questions;
+    }
+
+    private List<Option> getOptionsForQuestion(int questionId, Connection conn) {
+        List<Option> options = new ArrayList<>();
+
+        try {
+            PreparedStatement optionStatement = conn.prepareStatement(QueryConstant.OptionsForQuestion.GETALLOPTIONS);
+            optionStatement.setInt(1, questionId);
+            ResultSet optionResultSet = optionStatement.executeQuery();
+
+            while (optionResultSet.next()) {
+                Option option = new Option();
+                option.setId(optionResultSet.getInt("id"));
+                option.setName(optionResultSet.getString("name"));
+                option.setCorrect(optionResultSet.getInt("is_correct") == 1);
+                options.add(option);
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching options for question " + questionId + ": " + e.getMessage());
+        }
+        return options;
     }
 
     @Override
