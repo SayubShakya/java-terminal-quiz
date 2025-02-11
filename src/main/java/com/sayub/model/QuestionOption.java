@@ -2,13 +2,8 @@ package com.sayub.model;
 
 public class QuestionOption {
     private int id;
-    private int questionId;
-    private int optionId;
-
-    public QuestionOption(int questionId, int optionId) {
-        this.questionId = questionId;
-        this.optionId = optionId;
-    }
+    private Question question;
+    private Option option;
 
     public int getId() {
         return id;
@@ -18,19 +13,28 @@ public class QuestionOption {
         this.id = id;
     }
 
-    public int getQuestionId() {
-        return questionId;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionId(int questionId) {
-        this.questionId = questionId;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
-    public int getOptionId() {
-        return optionId;
+    public Option getOption() {
+        return option;
     }
 
-    public void setOptionId(int optionId) {
-        this.optionId = optionId;
+    public void setOption(Option option) {
+        this.option = option;
+    }
+
+    @Override
+    public String toString() {
+        return "QuestionOption{" +
+                "id=" + id +
+                ", question=" + question +
+                ", option=" + option +
+                '}';
     }
 }

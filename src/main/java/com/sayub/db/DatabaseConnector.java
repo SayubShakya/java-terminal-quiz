@@ -1,8 +1,8 @@
 package com.sayub.db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import com.sayub.constant.QueryConstant;
+
+import java.sql.*;
 
 public class DatabaseConnector {
 
@@ -12,5 +12,25 @@ public class DatabaseConnector {
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+
+    public static PreparedStatement getPreparedStatement(Connection conn, String sql) throws SQLException {
+       return conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+    }
+
+    public static void close(Connection connection, PreparedStatement preparedStatement) {
+        try {
+            if(connection != null) {
+                connection.close();
+            }
+
+            if(preparedStatement != null) {
+                preparedStatement.close();
+            }
+
+        } catch (Exception e) {
+            System.out.println("######## Error closing database connection ########");
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -1,7 +1,10 @@
 package com.sayub.repository;
 
+import com.sayub.model.Question;
 import com.sayub.model.QuestionOption;
 
+import java.util.List;
+
 public interface QuestionOptionRepository {
-    boolean save(QuestionOption questionOption);
+    List<QuestionOption> save(Question question);
 }

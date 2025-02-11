@@ -34,26 +34,22 @@ public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
 
             int rowAffected = preparedStatement.executeUpdate();
 
-            if (rowAffected > 0) {
+            if (rowAffected == 1) {
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+
                 if (generatedKeys.next()) {
-                    int insertId = generatedKeys.getInt(1);
-                    question.setId(insertId);
-                    System.out.println("Record inserted successfully with ID: " + insertId);
-                } else {
-                    System.out.println("Failed to retrieve insert ID.");
+
+                    int questionId = generatedKeys.getInt(1);
+                    question.setId(questionId);
+
+                    optionRepository.saveAll(question.getOptions());
+
+                    List<QuestionOption> questionOptions = questionOptionRepository.save(question);
+                    System.out.println("questionOptions: " + questionOptions);
                 }
+
             } else {
                 System.out.println("No records inserted.");
-            }
-
-            List<Option> options = question.getOptions();
-
-            int questionId = question.getId();
-
-            for (Option option : options) {
-                optionRepository.save(option);
-                questionOptionRepository.save(new QuestionOption(questionId, option.getId()));
             }
 
         } catch (Exception e) {
@@ -76,8 +72,6 @@ public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
                 question.setId(resultSet.getInt("id"));
                 question.setTitle(resultSet.getString("title"));
 
-
-
                 List<Option> options = getOptionsForQuestion(question.getId(), conn);
                 question.setOptions(options); //******************
 
@@ -93,7 +87,7 @@ public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
         List<Option> options = new ArrayList<>();
 
         try {
-            PreparedStatement optionStatement = conn.prepareStatement(QueryConstant.OptionsForQuestion.GETALLOPTIONS);
+            PreparedStatement optionStatement = conn.prepareStatement(QueryConstant.OptionsForQuestion.ANSWERCHOICE);
             optionStatement.setInt(1, questionId);
             ResultSet optionResultSet = optionStatement.executeQuery();
 

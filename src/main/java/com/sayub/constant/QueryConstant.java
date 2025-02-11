@@ -13,7 +13,7 @@ public interface QueryConstant {
     }
 
     interface OptionsForQuestion{
-        String GETALLOPTIONS = "SELECT o.id, o.name, o.is_correct " +
+        String ANSWERCHOICE  = "SELECT o.id, o.name, o.is_correct " +
                 "FROM options o " +
                 "JOIN questions_options qo ON o.id = qo.option_id " +
                 "WHERE qo.question_id = ?";
