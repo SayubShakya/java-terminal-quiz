@@ -4,7 +4,6 @@ import com.sayub.constant.QueryConstant;
 import com.sayub.db.DatabaseConnector;
 import com.sayub.model.Option;
 import com.sayub.model.Question;
-import com.sayub.model.QuestionOption;
 import com.sayub.repository.OptionRepository;
 import com.sayub.repository.QuestionOptionRepository;
 import com.sayub.repository.QuestionRepository;
@@ -27,35 +26,21 @@ public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
 
     @Override
     public boolean save(Question question) {
-        try {
-            Connection conn = DatabaseConnector.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Question.SAVE, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, question.getTitle());
 
-            int rowAffected = preparedStatement.executeUpdate();
+        int questionId = DatabaseConnector.update(QueryConstant.Question.SAVE, question.getId());
 
-            if (rowAffected == 1) {
-                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+        if (questionId != 0) {
 
-                if (generatedKeys.next()) {
+            question.setId(questionId);
 
-                    int questionId = generatedKeys.getInt(1);
-                    question.setId(questionId);
+            optionRepository.saveAll(question.getOptions());
 
-                    optionRepository.saveAll(question.getOptions());
+            questionOptionRepository.save(question);
 
-                    List<QuestionOption> questionOptions = questionOptionRepository.save(question);
-                    System.out.println("questionOptions: " + questionOptions);
-                }
-
-            } else {
-                System.out.println("No records inserted.");
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     @Override
