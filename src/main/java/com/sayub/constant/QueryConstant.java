@@ -5,7 +5,11 @@ public interface QueryConstant {
         String SAVE = "INSERT INTO questions(title) VALUES (?)";
         String GET_ALL = "SELECT * FROM questions";
         String GET_BY_ID = "SELECT * FROM questions WHERE id = ?";
+        String DELETE_FROM_QUESTION_OPTIONS = "DELETE FROM questions_options WHERE question_id = ?";
+        String DELETE_OPTIONS_BY_QUESTION_ID = "DELETE FROM options WHERE id IN " +
+                "(SELECT option_id FROM questions_options WHERE question_id = ?)";
         String DELETE_BY_ID = "DELETE FROM questions WHERE id = ?";
+
     }
 
     interface Option {
@@ -21,8 +25,13 @@ public interface QueryConstant {
         String SAVE = "INSERT INTO questions_options(question_id, option_id) VALUES (?,?)";
     }
 
-    interface Score{
+    interface Score {
         String SAVE = "INSERT INTO scores(username, score, time_in_second) VALUES (?,?,?)";
         String GET_ALL = "SELECT * FROM scores";
     }
 }
+
+
+
+
+

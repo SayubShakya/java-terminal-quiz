@@ -2,17 +2,14 @@ package com.sayub.repository.impl.database;
 
 import com.sayub.constant.QueryConstant;
 import com.sayub.db.DatabaseConnector;
-import com.sayub.db.OptionRowMapper;
-import com.sayub.db.QuestionRowMapper;
+import com.sayub.db.query.impl.OptionRowMapper;
+import com.sayub.db.query.impl.QuestionRowMapper;
 import com.sayub.model.Option;
 import com.sayub.model.Question;
 import com.sayub.repository.OptionRepository;
 import com.sayub.repository.QuestionOptionRepository;
 import com.sayub.repository.QuestionRepository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 
 public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
@@ -25,22 +22,40 @@ public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
         this.questionOptionRepository = questionOptionRepository;
     }
 
+//    @Override
+//    public boolean save(Question question) {
+//
+//        int questionId = DatabaseConnector.update(QueryConstant.Question.SAVE, question.getId());
+//
+//        if (questionId != 0) {
+//
+//            question.setId(questionId);
+//
+//            optionRepository.saveAll(question.getOptions());
+//
+//            questionOptionRepository.save(question);
+//
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
     @Override
     public boolean save(Question question) {
-
-        int questionId = DatabaseConnector.update(QueryConstant.Question.SAVE, question.getId());
-
+        int questionId = DatabaseConnector.update(QueryConstant.Question.SAVE, question.getTitle());
         if (questionId != 0) {
-
             question.setId(questionId);
 
-            optionRepository.saveAll(question.getOptions());
+            // Save options
+            boolean optionsSaved = optionRepository.saveAll(question.getOptions());
+            if (!optionsSaved) {
+                return false;
+            }
 
-            questionOptionRepository.save(question);
-
-            return true;
+            // Save question-option mapping
+            return questionOptionRepository.save(question);
         }
-
         return false;
     }
 
@@ -63,37 +78,40 @@ public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
 
     @Override
     public Question getById(int id) {
-        Question question = null;
 
-        try {
-            Connection conn = DatabaseConnector.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Question.GET_BY_ID);
+        Question question;
 
-            preparedStatement.setInt(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    question = new Question();
-                    question.setId(resultSet.getInt("id"));
-                    question.setTitle(resultSet.getString("title"));
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        question = DatabaseConnector.queryOne(QueryConstant.Question.GET_BY_ID, new QuestionRowMapper(), id);
+
+//        for (Question questions : getAll()) {
+//            if (questions.getId() == id) {
+//                return questions;
+//            }
+//
+//        }
+
+
         return question;
     }
 
+
+//    @Override
+//    public Question deleteById(int id) {
+//        DatabaseConnector.update(QueryConstant.Question.DELETE_BY_ID, id);
+//        return null;
+//    }
+
+
     @Override
-    public void deleteById(int id) {
-        try {
-            Connection conn = DatabaseConnector.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(QueryConstant.Question.DELETE_BY_ID);
-            preparedStatement.setInt(1, id);
-
-            int rowAffected = preparedStatement.executeUpdate();
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    public Question deleteById(int id) {
+        Question question = getById(id);
+        if (question == null) {
+            return null;
         }
+
+        DatabaseConnector.update(QueryConstant.Question.DELETE_FROM_QUESTION_OPTIONS, id);
+        DatabaseConnector.update(QueryConstant.Question.DELETE_OPTIONS_BY_QUESTION_ID, id);
+        DatabaseConnector.update(QueryConstant.Question.DELETE_BY_ID, id);
+        return question;
     }
 }

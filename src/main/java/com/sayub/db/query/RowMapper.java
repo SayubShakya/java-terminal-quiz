@@ -1,4 +1,4 @@
-package com.sayub.db;
+package com.sayub.db.query;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

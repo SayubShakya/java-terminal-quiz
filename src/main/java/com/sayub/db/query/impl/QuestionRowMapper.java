@@ -1,5 +1,6 @@
-package com.sayub.db;
+package com.sayub.db.query.impl;
 
+import com.sayub.db.query.RowMapper;
 import com.sayub.model.Question;
 
 import java.sql.ResultSet;

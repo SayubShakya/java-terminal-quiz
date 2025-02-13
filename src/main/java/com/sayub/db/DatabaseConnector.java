@@ -1,5 +1,6 @@
 package com.sayub.db;
 
+import com.sayub.db.query.RowMapper;
 import com.sayub.db.update.QueryParamMapper;
 
 import java.sql.*;
@@ -46,12 +47,7 @@ public class DatabaseConnector {
             connection = getConnection();
             preparedStatement = getPreparedStatement(connection, sql);
 
-            int paramCounter = 1;
-            for (Object param : params) {
-
-                preparedStatement.setObject(paramCounter++, param);
-
-            }
+            mapParams(params, preparedStatement);
 
             int rowAffected = preparedStatement.executeUpdate();
 
@@ -90,11 +86,7 @@ public class DatabaseConnector {
 
             for (Object[] params : bulkParam) {
 
-                int paramCounter = 1;
-
-                for (Object param : params) {
-                    preparedStatement.setObject(paramCounter++, param);
-                }
+                mapParams(params, preparedStatement);
 
                 preparedStatement.addBatch();
             }
@@ -151,11 +143,7 @@ public class DatabaseConnector {
 
             for (Object[] params : bulkParam) {
 
-                int paramCounter = 1;
-
-                for (Object param : params) {
-                    preparedStatement.setObject(paramCounter++, param);
-                }
+                mapParams(params, preparedStatement);
 
                 preparedStatement.addBatch();
             }
@@ -199,7 +187,7 @@ public class DatabaseConnector {
         return new int[0];
     }
 
-    public static <T> List<T> queryAll(String sql, RowMapper<T> rowMapper, Object... params ) {
+    public static <T> List<T> queryAll(String sql, RowMapper<T> rowMapper, Object... params) {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -209,20 +197,15 @@ public class DatabaseConnector {
             connection = getConnection();
             preparedStatement = getPreparedStatement(connection, sql);
 
-            int paramCounter = 1;
-            for (Object param : params) {
-
-                preparedStatement.setObject(paramCounter++, param);
-
-            }
+            mapParams(params, preparedStatement);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
             List<T> list = new ArrayList<>();
 
-            while(resultSet.next()) {
-               T object = rowMapper.map(resultSet);
-               list.add(object);
+            while (resultSet.next()) {
+                T object = rowMapper.map(resultSet);
+                list.add(object);
             }
 
             return list;
@@ -242,6 +225,45 @@ public class DatabaseConnector {
     }
 
 
+    public static <T> T queryOne(String sql, RowMapper<T> rowMapper, Object... params) {
 
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
+        try {
+
+            connection = getConnection();
+            preparedStatement = getPreparedStatement(connection, sql);
+
+            mapParams(params, preparedStatement);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return rowMapper.map(resultSet);
+            }
+
+        } catch (Exception e) {
+
+            System.out.printf("######## Error fetching: %s", sql);
+            System.out.println(e.getMessage());
+
+        } finally {
+
+            close(connection, preparedStatement);
+
+        }
+        return null;
+
+    }
+
+    private static void mapParams(Object[] params, PreparedStatement preparedStatement) throws SQLException {
+        int paramCounter = 1;
+        for (Object param : params) {
+
+            preparedStatement.setObject(paramCounter++, param);
+
+        }
+    }
 }
+

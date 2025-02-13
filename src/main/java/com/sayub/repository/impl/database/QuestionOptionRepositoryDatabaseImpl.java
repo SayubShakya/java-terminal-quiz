@@ -10,10 +10,7 @@ public class QuestionOptionRepositoryDatabaseImpl implements QuestionOptionRepos
 
     @Override
     public boolean save(Question question) {
-
         int[] savedIdArray = DatabaseConnector.updateBulk(QueryConstant.QuestionOption.SAVE, question, new QuestionOptionQueryParamMapper());
-
         return savedIdArray.length == question.getOptions().size();
-
     }
 }

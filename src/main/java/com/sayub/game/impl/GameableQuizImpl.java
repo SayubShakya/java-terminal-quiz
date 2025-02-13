@@ -164,8 +164,10 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
     public void manage() {
         while (true) {
             manageQuiz();
+                break;
+            }
         }
-    }
+
 
     private void manageQuiz() {
         System.out.println("--------------------------------------------------");
@@ -195,40 +197,20 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
                 break;
             case 2:
                 List<Question> questions = questionRepository.getAll();
-                if (questions != null) {
+                if (questions != null && !questions.isEmpty()) {
                     for (Question question : questions) {
                         System.out.println(question);
                     }
+                } else {
+                    System.out.println("No questions found.");
                 }
-
                 break;
             case 3:
-                System.out.println("--------------------------------------------------");
-                System.out.print("Enter question ID: ");
-                try {
-                    int id = Integer.parseInt(scanner.nextLine());
-
-                    break;
-                } catch (Exception e) {
-                    System.out.println("There is no valid question ID.");
-                    System.out.println("--------------------------------------------------");
-
-                }
+                viewQuestionById();
                 break;
+
             case 4:
-                System.out.println("--------------------------------------------------");
-                System.out.print("Enter question ID to delete: ");
-                try {
-                    int id = Integer.parseInt(scanner.nextLine());
-                    questionRepository.deleteById(id);
-                    System.out.println("--------------------------------------------------");
-                    System.out.println("Question deleted successfully.");
-                    System.out.println("--------------------------------------------------");
-                } catch (Exception e) {
-                    System.out.println("--------------------------------------------------");
-                    System.out.println("Invalid input. Please enter a valid question ID.");
-                    System.out.println("--------------------------------------------------");
-                }
+                deleteQuestionById();
                 break;
             case 5:
                 menu();
@@ -273,77 +255,134 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
                 continue;
             }
 
-            List<Option> dynamicOptionArray = new ArrayList<>();
+//            List<Option> dynamicOptionArray = new ArrayList<>();
+//            int optionId = 1;
+//            while (true) {
+//
+//                if (handleOption(dynamicOptionArray, optionId)) {
+//                    break;
+//                } else {
+//                    optionId++;
+//                    continue;
+//                }
+//            }
+//            question.setOptions(dynamicOptionArray);
+//            questionRepository.save(question);
+//        }
+//    }
+//
+//    public boolean handleOption(List<Option> dynamicOptionArray, int optionId) {
+//        Option option = new Option();
+//        option.setId(optionId);
+//        try {
+//            System.out.print("Enter your option or 'Q' to go back: ");
+//            String text = scanner.nextLine();
+//
+//            if (hasQ(text))
+//                return true;
+//
+//            isValidText(text);
+//            option.setName(text);
+//
+//        } catch (Exception e) {
+//            System.out.println("--------------------------------------------------");
+//            System.out.println("Invalid input. Please enter a valid option.");
+//            System.out.println("--------------------------------------------------");
+//            return false;
+//        }
+//
+//        try {
+//            System.out.print("Correct option: ");
+//            String text = scanner.nextLine();
+//            if (hasQ(text))
+//                return true;
+//
+//            isValidText(text);
+//
+//            if (text.equalsIgnoreCase("Y")) {
+//                option.setCorrect(true);
+//            } else if (text.equalsIgnoreCase("N")) {
+//                option.setCorrect(false);
+//            } else {
+//                throw new RuntimeException();
+//            }
+//
+//        } catch (Exception e) {
+//            System.out.println("--------------------------------------------------");
+//            System.out.println("Invalid input. Please enter a valid value (y/n).");
+//            System.out.println("--------------------------------------------------");
+//            return false;
+//        }
+//
+//        dynamicOptionArray.add(option);
+//        return false;
+//    }
+//
+//    public boolean hasQ(String text) {
+//        return "Q".equalsIgnoreCase(text);
+//    }
+//
+//    public void isValidText(String text) {
+//        if (text == null || text.length() == 0) {
+//            throw new RuntimeException();
+//        }
+//    }
+
+
+            List<Option> options = new ArrayList<>();
             int optionId = 1;
             while (true) {
+                System.out.print("Enter option " + optionId + " or 'Q' to finish: ");
+                String optionText = scanner.nextLine();
 
-                if (handleOption(dynamicOptionArray, optionId)) {
+                if (hasQ(optionText)) {
+                    if (options.size() < 2) {
+                        System.out.println("You must add at least 2 options.");
+                        continue;
+                    }
                     break;
-                } else {
+                }
+
+                if (isValidText(optionText)) {
+                    Option option = new Option();
+                    option.setId(optionId);
+                    option.setName(optionText);
+
+                    System.out.print("Is this option correct? (Y/N): ");
+                    String isCorrectInput = scanner.nextLine();
+                    if (isCorrectInput.equalsIgnoreCase("Y")) {
+                        option.setCorrect(true);
+                    } else if (isCorrectInput.equalsIgnoreCase("N")) {
+                        option.setCorrect(false);
+                    } else {
+                        System.out.println("Invalid input. Please enter 'Y' or 'N'.");
+                        continue;
+                    }
+
+                    options.add(option);
                     optionId++;
-                    continue;
+                } else {
+                    System.out.println("Invalid input. Please enter a valid option.");
                 }
             }
-            question.setOptions(dynamicOptionArray);
-            questionRepository.save(question);
-        }
-    }
 
-    public boolean handleOption(List<Option> dynamicOptionArray, int optionId) {
-        Option option = new Option();
-        option.setId(optionId);
-        try {
-            System.out.print("Enter your option or 'Q' to go back: ");
-            String text = scanner.nextLine();
-
-            if (hasQ(text))
-                return true;
-
-            isValidText(text);
-            option.setName(text);
-
-        } catch (Exception e) {
-            System.out.println("--------------------------------------------------");
-            System.out.println("Invalid input. Please enter a valid option.");
-            System.out.println("--------------------------------------------------");
-            return false;
-        }
-
-        try {
-            System.out.print("Correct option: ");
-            String text = scanner.nextLine();
-            if (hasQ(text))
-                return true;
-
-            isValidText(text);
-
-            if (text.equalsIgnoreCase("Y")) {
-                option.setCorrect(true);
-            } else if (text.equalsIgnoreCase("N")) {
-                option.setCorrect(false);
+            question.setOptions(options);
+            boolean isSaved = questionRepository.save(question);
+            if (isSaved) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("Question saved successfully!");
             } else {
-                throw new RuntimeException();
+                System.out.println("Failed to save the question.");
             }
-
-        } catch (Exception e) {
-            System.out.println("--------------------------------------------------");
-            System.out.println("Invalid input. Please enter a valid value (y/n).");
-            System.out.println("--------------------------------------------------");
-            return false;
         }
-
-        dynamicOptionArray.add(option);
-        return false;
     }
 
     public boolean hasQ(String text) {
         return "Q".equalsIgnoreCase(text);
     }
 
-    public void isValidText(String text) {
-        if (text == null || text.length() == 0) {
-            throw new RuntimeException();
-        }
+    public boolean isValidText(String text) {
+        return text != null && !text.trim().isEmpty();
     }
 
     @Override
@@ -353,6 +392,52 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
         for (Score score : scoreRepository.getAll()) {
             System.out.println("--------------------------------------------------");
             System.out.printf("%s              %d                %d\n", score.getUsername(), score.getScore(), score.getTimeInSeconds());
+            System.out.println("--------------------------------------------------");
+        }
+    }
+
+
+    public void viewQuestionById(){
+
+        System.out.println("--------------------------------------------------");
+        System.out.print("Enter question ID to view: ");
+        try {
+            int id = Integer.parseInt(scanner.nextLine());
+            Question question = questionRepository.getById(id);
+
+            if (question != null) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("Question: " + question.getId() + ". " + question.getTitle());
+                System.out.println("--------------------------------------------------");
+
+            } else {
+                System.out.println("No question found with ID: " + id);
+                System.out.println("--------------------------------------------------");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a valid question ID.");
+            System.out.println("--------------------------------------------------");
+        }
+
+    }
+
+    public void deleteQuestionById() {
+        System.out.print("Enter question ID to delete: ");
+        try {
+            int id = Integer.parseInt(scanner.nextLine());
+            Question question = questionRepository.deleteById(id);
+
+            if (question != null) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("Question: " + question.getId() + ". " + question.getTitle());
+                System.out.println("Question deleted successfully!");
+                System.out.println("--------------------------------------------------");
+            } else {
+                System.out.println("No question found with ID: " + id);
+                System.out.println("--------------------------------------------------");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a valid question ID.");
             System.out.println("--------------------------------------------------");
         }
     }

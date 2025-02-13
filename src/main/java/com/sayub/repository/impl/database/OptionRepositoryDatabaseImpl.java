@@ -12,12 +12,13 @@ public class OptionRepositoryDatabaseImpl implements OptionRepository {
 
     @Override
     public boolean saveAll(List<Option> options) {
-
-        int[] savedIdArray = DatabaseConnector
-                .updateBulk(QueryConstant.Option.SAVE, options, new ListOptionQueryParamMapper());
-
-        return savedIdArray.length == options.size();
-
+        int[] savedIdArray = DatabaseConnector.updateBulk(QueryConstant.Option.SAVE, options, new ListOptionQueryParamMapper());
+        if (savedIdArray.length == options.size()) {
+            for (int i = 0; i < options.size(); i++) {
+                options.get(i).setId(savedIdArray[i]);
+            }
+            return true;
+        }
+        return false;
     }
-
 }
