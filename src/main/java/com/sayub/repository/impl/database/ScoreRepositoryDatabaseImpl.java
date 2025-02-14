@@ -16,29 +16,50 @@ public class ScoreRepositoryDatabaseImpl implements ScoreRepository {
     }
 
 
+//    @Override
+//    public boolean save(Score score) {
+//        // If user exists
+//
+//
+//        // check score is greater and time is less than the new data if yes - save else dont save
+//        // If user doesnt exists
+//        // save
+//
+//        Score oldScore = DatabaseConnector.queryOne(QueryConstant.Score.GET_BY_USERNAME, new ScoreRowMapper());
+//        if (score == null) {
+//            if (oldScore != null) {
+//                int scoreId = DatabaseConnector.update(QueryConstant.Score.SAVE, score.getUsername(), score.getScore(), score.getTimeInSeconds());
+//                if (scoreId != 0) {
+//                    score.setId(scoreId);
+//                    return true;
+//                }
+//            }
+//
+//
+//        }
+//        return false;
+//
+//
+//    }
+
+
     @Override
     public boolean save(Score score) {
-        // If user exists
+        Score oldScore = DatabaseConnector.queryOne(QueryConstant.Score.GET_BY_USERNAME, new ScoreRowMapper(), score.getUsername());
 
-
-        // check score is greater and time is less than the new data if yes - save else dont save
-        // If user doesnt exists
-        // save
-
-        Score oldScore = DatabaseConnector.queryOne(QueryConstant.Score.GET_BY_USERNAME, new ScoreRowMapper());
-        if (score == null) {
-            if (oldScore != null) {
-
+        if (oldScore == null) {
+            int scoreId = DatabaseConnector.update(QueryConstant.Score.SAVE, score.getUsername(), score.getScore(), score.getTimeInSeconds());
+            if (scoreId != 0) {
+                score.setId(scoreId);
+                return true;
             }
-
-        }
-
-
-        int scoreId = DatabaseConnector.update(QueryConstant.Score.SAVE, score.getUsername(), score.getScore(), score.getTimeInSeconds());
-        if (scoreId != 0) {
-            score.setId(scoreId);
-            return true;
+        } else {
+            if (score.getScore() > oldScore.getScore() || (score.getScore() == oldScore.getScore() && score.getTimeInSeconds() < oldScore.getTimeInSeconds())) {
+                DatabaseConnector.update(QueryConstant.Score.UPDATE_SCORE, score.getScore(), score.getTimeInSeconds(), score.getUsername()
+                );
+            }
         }
         return false;
     }
 }
+

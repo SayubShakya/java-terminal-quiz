@@ -29,6 +29,7 @@ public interface QueryConstant {
         String SAVE = "INSERT INTO scores(username, score, time_in_second) VALUES (?,?,?)";
         String GET_ALL = "select * from scores order by score desc, time_in_second asc;";
         String GET_BY_USERNAME = "select * from scores where username = ?";
+        String UPDATE_SCORE = "UPDATE scores SET score = ?, time_in_second = ? WHERE username = ?";
     }
 }
 
