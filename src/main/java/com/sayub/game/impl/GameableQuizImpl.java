@@ -111,8 +111,10 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
                 continue;
             }
 
+            int optionCounter = 1;
             for (Option option : question.getOptions()) {
                 System.out.println(option.getId() + ". " + option.getName());
+                optionCounter++;
             }
 
             for (int i = 0; i < 3; i++) {
@@ -140,6 +142,7 @@ public class GameableQuizImpl implements Menuable, Startable, Manageable, Quitab
                     break;
 
                 } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
                     continue;
                 }
             }

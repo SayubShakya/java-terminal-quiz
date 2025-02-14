@@ -9,3 +9,4 @@ public interface ScoreRepository {
 
     boolean save(Score score);
 }
+

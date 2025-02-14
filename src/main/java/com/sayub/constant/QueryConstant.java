@@ -3,11 +3,11 @@ package com.sayub.constant;
 public interface QueryConstant {
     interface Question {
         String SAVE = "INSERT INTO questions(title) VALUES (?)";
+
         String GET_ALL = "SELECT * FROM questions";
         String GET_BY_ID = "SELECT * FROM questions WHERE id = ?";
         String DELETE_FROM_QUESTION_OPTIONS = "DELETE FROM questions_options WHERE question_id = ?";
-        String DELETE_OPTIONS_BY_QUESTION_ID = "DELETE FROM options WHERE id IN " +
-                "(SELECT option_id FROM questions_options WHERE question_id = ?)";
+        String DELETE_OPTIONS_BY_QUESTION_ID = "DELETE FROM options WHERE id IN " + "(SELECT option_id FROM questions_options WHERE question_id = ?)";
         String DELETE_BY_ID = "DELETE FROM questions WHERE id = ?";
 
     }
@@ -27,9 +27,11 @@ public interface QueryConstant {
 
     interface Score {
         String SAVE = "INSERT INTO scores(username, score, time_in_second) VALUES (?,?,?)";
-        String GET_ALL = "SELECT * FROM scores";
+        String GET_ALL = "select * from scores order by score desc, time_in_second asc;";
+        String GET_BY_USERNAME = "select * from scores where username = ?";
     }
 }
+
 
 
 

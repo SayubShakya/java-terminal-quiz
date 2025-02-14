@@ -47,13 +47,11 @@ public class QuestionRepositoryDatabaseImpl implements QuestionRepository {
         if (questionId != 0) {
             question.setId(questionId);
 
-            // Save options
             boolean optionsSaved = optionRepository.saveAll(question.getOptions());
             if (!optionsSaved) {
                 return false;
             }
 
-            // Save question-option mapping
             return questionOptionRepository.save(question);
         }
         return false;
