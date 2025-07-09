@@ -1,9 +1,35 @@
+# Compiled class files
 *.class
-*.txt
-*.obj
-.idea
-out
+
+# Build output directories
+out/
+build/
+target/
+
+# IntelliJ IDEA project files
+.idea/
 *.iml
+*.iws
+*.ipr
+
+# Maven wrapper files
+.mvn/
+
+# Logs
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Other generated or unnecessary files
+*.obj
+*.txt
 *.json
-build
- .mvn/
+
+# Eclipse files (if ever used)
+.metadata/
+bin/
+
+# VSCode settings folder (if used)
+.vscode/
