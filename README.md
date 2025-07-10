@@ -1,6 +1,6 @@
 # 🧠 Terminal-Based Quiz Application
 
-This is a **command-line Java quiz application** that allows users to take quizzes, manage questions, and track high scores — all within a terminal interface.
+This is a **command-line Java quiz application** that allows users to take quizzes, manage questions, and track high scores all within a terminal interface.
 
 ---
 
@@ -12,7 +12,7 @@ This project demonstrates a **text-based quiz system** written in Java, designed
 - Managing quiz questions (CRUD operations)
 - Viewing high scores
 
-It’s simple, fast, and perfect for learning Java fundamentals like control flow, loops, user input, and data handling.
+It’s simple, fast, and perfect for learning the fundamentals of Java, including control flow, loops, user input, and data handling.
 
 ---
 
@@ -64,7 +64,7 @@ Organized the application using multiple classes:
 - Press `2` to View All Questions
 - Press `3` to View Question by ID
 - Press `4` to Delete Question
-- Press `5` to Return to Main Menu
+- Press `5` to Return to the Main Menu
 
 ---
 
