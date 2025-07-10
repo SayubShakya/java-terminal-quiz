@@ -26,10 +26,10 @@ In this project, I built a fully functional quiz system in the terminal using co
 
 ### 🛠️ 2. Quiz Management System
 - Added CRUD operations to manage quiz questions:
-    - **Add a question**
-    - **View all questions**
-    - **View question by ID**
-    - **Delete question**
+  - **Add a question**
+  - **View all questions**
+  - **View question by ID**
+  - **Delete question**
 - These operations simulate an admin panel for quiz content management.
 
 ### 🧠 3. Quiz Gameplay
